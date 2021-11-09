@@ -2,16 +2,20 @@
 """
 Convert pyproject.toml to requirements.txt
 """
+from pathlib import Path
+
 import toml
+import click
 
 
 class RequirementsConverter:
     """
     @description: a class containing scripts for conversion
     """
-    def __init__(self) -> None:
-        self.__source = 'pyproject.toml'
-        self.__target = 'requirements.txt'
+    def __init__(self, project_dir: str) -> None:
+        self.__project_dir = Path(project_dir).resolve(strict=True)
+        self.__source = self.__project_dir / 'pyproject.toml'
+        self.__target = self.__project_dir / 'requirements.txt'
         self.__dependencies = self.__load_dependencies()
         self.__requirements = self.__make_requirements()
 
@@ -50,8 +54,18 @@ class RequirementsConverter:
         """
         with open(self.__target, 'w', encoding='UTF-8') as file:
             file.write(self.__requirements)
+        print(f"requirements.txt has been stored in {self.__project_dir}")
+
+
+@click.command()
+@click.argument('project_dir', default='.')
+def main(project_dir):
+    """
+    @description: main function to perform the conversion
+    """
+    converter = RequirementsConverter(project_dir)
+    converter.write_requirements()
 
 
 if __name__ == '__main__':
-    converter = RequirementsConverter()
-    converter.write_requirements()
+    main()
