@@ -6,7 +6,8 @@ authors = ["Jacky Lee <jla524@sfu.ca>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-req2toml = "^1.2.0"
+click = "8.0.0"
+toml = "0.10.2"
 
 [tool.poetry.dev-dependencies]
 
