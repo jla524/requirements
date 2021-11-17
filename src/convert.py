@@ -12,10 +12,12 @@ class RequirementsConverter:
     """
     @description: a class containing scripts for conversion
     """
-    def __init__(self, project_dir: str) -> None:
+    def __init__(self, project_dir: str, with_version: bool = True) -> None:
         self.__project_dir = Path(project_dir).resolve(strict=True)
         self.__source = self.__project_dir / 'pyproject.toml'
         self.__target = self.__project_dir / 'requirements.txt'
+
+        self.__with_version = with_version
         self.__dependencies = self.__load_dependencies()
         self.__requirements = self.__make_requirements()
 
@@ -32,8 +34,11 @@ class RequirementsConverter:
         """
         @description: convert the list of dependencies to requirements format
         """
-        items = [f'{package}=={version}'
-                 for package, version in self.__dependencies.items()]
+        if self.__with_version:
+            items = [f'{package}=={version}'
+                     for package, version in self.__dependencies.items()]
+        else:
+            items = self.__dependencies.keys()
         return '\n'.join(items)
 
     def get_dependencies(self) -> dict[str, str]:
@@ -44,7 +49,7 @@ class RequirementsConverter:
 
     def get_requirements(self) -> str:
         """
-        @description: getter for requirements
+        @description: getter for requirements (separated by \n)
         """
         return self.__requirements
 
@@ -59,11 +64,12 @@ class RequirementsConverter:
 
 @click.command()
 @click.argument('project_dir', default='.')
-def main(project_dir):
+@click.option('--version/--noversion', default=True)
+def main(project_dir, version):
     """
     @description: main function to perform the conversion
     """
-    converter = RequirementsConverter(project_dir)
+    converter = RequirementsConverter(project_dir, version)
     converter.write_requirements()
 
 
