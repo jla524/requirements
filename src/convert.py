@@ -36,13 +36,13 @@ class RequirementsConverter:
         @description: convert the list of dependencies to requirements format
         """
         if self.__with_version:
-            items = [
-                f'{package}=={version.strip("^=")}'
+            packages = [
+                f"{package}=={version.strip('^=')}"
                 for package, version in self.__dependencies.items()
             ]
         else:
-            items = list(self.__dependencies.keys())
-        return "\n".join(items)
+            packages = list(self.__dependencies.keys())
+        return "\n".join(packages)
 
     def get_dependencies(self) -> dict[str, str]:
         """
