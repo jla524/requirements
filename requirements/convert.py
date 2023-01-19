@@ -26,21 +26,23 @@ class RequirementsConverter:
         """
         @description: get a dict of packages and versions from pyproject.toml
         """
+        parsed = {}
         content = toml.load(self.__source)
         dependencies = content["tool"]["poetry"]["dependencies"]
-        parsed = {}
         for package, meta in dependencies.items():
             if package == "python":
                 continue
-            if isinstance(meta, str):
-                parsed[package] = meta.strip("^=")
-            elif "extras" in meta:
+            if isinstance(meta, str) and meta.startswith("{") and meta.endswith("}"):
+                meta = toml.loads(meta)
+            if "extras" in meta:
                 extras = ",".join(meta["extras"])
                 parsed[f"{package}[{extras}]"] = meta["version"].strip("^=")
             elif "version" in meta:
                 parsed[package] = meta["version"].strip("^=")
             elif "path" in meta:
                 parsed[meta["path"]] = ""
+            else:
+                parsed[package] = meta.strip("^=")
         return parsed
 
     def __make_requirements(self) -> str:
@@ -77,7 +79,7 @@ class RequirementsConverter:
 @click.command()
 @click.argument("project_dir", default=".")
 @click.option("--version/--noversion", default=True)
-def main(project_dir, version):
+def main(project_dir: str, version: bool) -> None:
     """
     @description: main function to perform the conversion
     """

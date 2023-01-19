@@ -23,11 +23,11 @@ Install [poetry][1] dependencies with [pip][2].
 
 4. Run the conversion script
    ```
-   python3 src/convert.py <path to project>
+   python3 requirements/convert.py <path to project>
    ```
    To generate requirements without version specifiers
    ```
-   python3 src/convert.py <path to project> --noversion
+   python3 requirements/convert.py <path to project> --noversion
    ```
 
 
