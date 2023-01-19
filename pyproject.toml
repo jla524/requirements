@@ -1,16 +1,18 @@
+[build-system]
+requires = [ "poetry-core>=1.0.0",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "requirements"
 version = "0.1.0"
 description = ""
-authors = ["Jacky Lee <jla524@sfu.ca>"]
+authors = [ "Jacky Lee <jla524@sfu.ca>",]
 
 [tool.poetry.dependencies]
-python = "^3.9"
 click = "8.0.0"
 toml = "0.10.2"
 
 [tool.poetry.dev-dependencies]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.scripts]
+test = "script.project_helper:run_tests"
