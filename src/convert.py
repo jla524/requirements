@@ -24,25 +24,34 @@ class RequirementsConverter:
 
     def __load_dependencies(self) -> dict[str, str]:
         """
-        @description: get a list of dependencies from pyproject.toml
+        @description: get a dict of packages and versions from pyproject.toml
         """
         content = toml.load(self.__source)
-        packages = content["tool"]["poetry"]["dependencies"]
-        packages.pop("python", None)
-        return packages
+        dependencies = content["tool"]["poetry"]["dependencies"]
+        parsed = {}
+        for package, meta in dependencies.items():
+            if package == "python":
+                continue
+            if isinstance(meta, str):
+                parsed[package] = meta.strip("^=")
+            elif "extras" in meta:
+                extras = ",".join(meta["extras"])
+                parsed[f"{package}[{extras}]"] = meta["version"].strip("^=")
+            elif "version" in meta:
+                parsed[package] = meta["version"].strip("^=")
+            elif "path" in meta:
+                parsed[meta["path"]] = ""
+        return parsed
 
     def __make_requirements(self) -> str:
         """
-        @description: convert the list of dependencies to requirements format
+        @description: convert the dict of dependencies to requirements format
         """
-        if self.__with_version:
-            packages = [
-                f"{package}=={version.strip('^=')}"
-                for package, version in self.__dependencies.items()
-            ]
-        else:
-            packages = list(self.__dependencies.keys())
-        return "\n".join(packages)
+        requirements = [
+            f"{package}=={version}" if (version and self.__with_version) else package
+            for package, version in self.__dependencies.items()
+        ]
+        return "\n".join(requirements)
 
     def get_dependencies(self) -> dict[str, str]:
         """
