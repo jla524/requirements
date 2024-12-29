@@ -7,7 +7,7 @@ from requirements.convert import RequirementsConverter
 
 
 def write_dependencies(items: dict[str, str]) -> None:
-    source_path = Path(".").resolve() / "test" / "pyproject.toml"
+    source_path = Path(".").resolve() / "tests" / "pyproject.toml"
     if not source_path.exists():
         raise FileNotFoundError
     content = toml.load(str(source_path))
@@ -17,7 +17,7 @@ def write_dependencies(items: dict[str, str]) -> None:
 
 
 def read_requirements() -> list[str]:
-    output_path = Path(".").resolve() / "test" / "requirements.txt"
+    output_path = Path(".").resolve() / "tests" / "requirements.txt"
     if not output_path.exists():
         raise FileNotFoundError
     with output_path.open("r") as file:
@@ -32,7 +32,7 @@ class TestRequirementsConverter(unittest.TestCase):
             package, version = dependency.split(" = ", maxsplit=1)
             converted[package] = version.strip(r"\"'")
         write_dependencies(converted)
-        RequirementsConverter("test").write_requirements()
+        RequirementsConverter("tests").write_requirements()
         self.assertListEqual(read_requirements(), list(mapping.values()))
 
     def test_regular(self):
