@@ -21,7 +21,7 @@ Install [poetry][1] dependencies with [pip][2].
 3. Install the required dependencies
 
    ```bash
-   pip install -r requirements.txt
+   pip install -e .
    ```
 
 4. Run the conversion script
