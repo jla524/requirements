@@ -9,7 +9,6 @@ description = ""
 authors = [ "Jacky Lee <jla524@sfu.ca>",]
 
 [tool.poetry.dependencies]
-click = "8.0.0"
 toml = "0.10.2"
 
 [tool.poetry.dev-dependencies]

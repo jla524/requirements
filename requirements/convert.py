@@ -2,10 +2,10 @@
 """
 Convert pyproject.toml to requirements.txt
 """
+import argparse
 from pathlib import Path
 
 import toml
-import click
 
 
 class RequirementsConverter:
@@ -76,14 +76,17 @@ class RequirementsConverter:
         print(f"requirements.txt has been stored in {self.__project_dir}")
 
 
-@click.command()
-@click.argument("project_dir", default=".")
-@click.option("--version/--noversion", default=True)
-def main(project_dir: str, version: bool) -> None:
+def main() -> None:
     """
     @description: main function to perform the conversion
     """
-    converter = RequirementsConverter(project_dir, version)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("project_dir", default=".")
+    parser.add_argument("--no-version", dest="version", action="store_false")
+    parser.add_argument("--version", dest="version", action="store_true")
+
+    args = parser.parse_args()
+    converter = RequirementsConverter(args.project_dir, args.version)
     converter.write_requirements()
 
 
