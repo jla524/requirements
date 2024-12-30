@@ -28,9 +28,14 @@ def read_requirements() -> list[str]:
 class TestRequirementsConverter(unittest.TestCase):
     def __check_conversions(self, mapping: dict[str, str]) -> None:
         converted = {}
+
         for dependency in list(mapping.keys()):
             package, version = dependency.split(" = ", maxsplit=1)
-            converted[package] = version.strip(r"\"'")
+            if version.startswith("{") and version.endswith("}"):
+                converted[package] = toml.loads(version)
+            else:
+                converted[package] = version.strip(r"\"'")
+
         write_dependencies(converted)
         RequirementsConverter("tests").write_requirements()
         self.assertListEqual(read_requirements(), list(mapping.values()))

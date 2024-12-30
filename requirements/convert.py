@@ -2,10 +2,9 @@
 """
 Convert pyproject.toml to requirements.txt
 """
+import tomllib
 import argparse
 from pathlib import Path
-
-import toml
 
 
 class RequirementsConverter:
@@ -27,13 +26,14 @@ class RequirementsConverter:
         @description: get a dict of packages and versions from pyproject.toml
         """
         parsed = {}
-        content = toml.load(self.__source)
+        with self.__source.open("rb") as f:
+            content = tomllib.load(f)
         dependencies = content["tool"]["poetry"]["dependencies"]
         for package, meta in dependencies.items():
             if package == "python":
                 continue
             if isinstance(meta, str) and meta.startswith("{") and meta.endswith("}"):
-                meta = toml.loads(meta)
+                meta = tomllib.loads(meta)
             if "extras" in meta:
                 extras = ",".join(meta["extras"])
                 parsed[f"{package}[{extras}]"] = meta["version"].strip("^=")

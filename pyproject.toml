@@ -9,9 +9,9 @@ description = ""
 authors = [ "Jacky Lee <jla524@sfu.ca>",]
 
 [tool.poetry.dependencies]
-toml = "0.10.2"
 
 [tool.poetry.dev-dependencies]
+toml = "0.10.2"
 
 [tool.poetry.scripts]
 test = "script.project_helper:run_tests"
