@@ -71,7 +71,7 @@ class RequirementsConverter:
         """
         @description: write requirements to requirements.txt
         """
-        with open(self.__target, "w", encoding="UTF-8") as file:
+        with self.__target.open("w", encoding="UTF-8") as file:
             file.write(self.__requirements)
         print(f"requirements.txt has been stored in {self.__project_dir}")
 
