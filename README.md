@@ -11,20 +11,7 @@ Install [poetry][1] dependencies with [pip][2].
    cd requirements
    ```
 
-2. Create a virtual environment (optional)
-
-   ```bash
-   python3 -m venv env
-   source env/bin/activate
-   ```
-
-3. Install the required dependencies
-
-   ```bash
-   pip install -e .
-   ```
-
-4. Run the conversion script
+2. Run the conversion script
 
    ```bash
    python3 requirements/convert.py <path to project>
